@@ -6,6 +6,7 @@ import {
   getUserById,
 } from "../services/auth.service.js";
 import AppError from "../utils/appError.utils.js";
+import { verifyEmailToken } from "../services/emailVerification.service.js";
 
 export const registerController = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -76,6 +77,15 @@ export const refreshController = async (req, res, next) => {
       accessToken,
     });
   } catch (error) {
+    if (error.statusCode === 401) {
+      res.clearCookie("refreshToken", {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+    }
+
     next(error);
   }
 };
@@ -112,6 +122,19 @@ export const getCurrentUserController = async (req, res, next) => {
     res.status(200).json({
       success: true,
       user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verifyEmailController = async (req, res, next) => {
+  try {
+    await verifyEmailToken(req.body.token);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully. You can now log in.",
     });
   } catch (error) {
     next(error);

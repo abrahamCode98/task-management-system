@@ -3,8 +3,7 @@ import updateTaskSchema from "../validation/task.update.validation.js";
 import paginationSchema from "../validation/task.pagination.validation.js";
 import registerSchema from "../validation/auth.validation.js";
 import loginSchema from "../validation/login.validation.js";
-
-
+import emailVerificationSchema from "../validation/email-verification.validation.js";
 
 export const validateCreateTask = (req, res, next) => {
   const { error, value } = createTaskSchema.validate(req.body, {
@@ -49,7 +48,7 @@ export const validateRegister = (req, res, next) => {
     abortEarly: false,
   });
 
-  if(error) {
+  if (error) {
     next(error);
   } else {
     req.body = value;
@@ -62,11 +61,23 @@ export const validateLogin = (req, res, next) => {
     abortEarly: false,
   });
 
-  if(error) {
-    next(error)
+  if (error) {
+    next(error);
   } else {
     req.body = value;
     next();
   }
 };
- 
+
+export const validateEmailVerification = (req, res, next) => {
+  const { error, value } = emailVerificationSchema.validate(req.body, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    next(error);
+  } else {
+    req.body = value;
+    next();
+  }
+};

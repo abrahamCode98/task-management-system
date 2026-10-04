@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
   },
   password: { type: String, required: true },
+  emailVerified: { type: Boolean, default: false },
 });
 
 const User = mongoose.model("User", userSchema);

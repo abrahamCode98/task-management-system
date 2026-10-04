@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import TaskList from "./components/TaskList/TaskList";
 import TaskForm from "./components/TaskForm/TaskForm";
 import { deleteTask, getTasks, updateTask } from "./api/taskApi.js";
 import { useAuth } from "./context/useAuth.js";
 import LoginPage from "./Pages/LoginPage.jsx";
 import RegisterPage from "./Pages/RegisterPage.jsx";
+import VerifyEmailPage from "./Pages/VerifyEmailPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function Dashboard() {
@@ -58,7 +65,9 @@ function Dashboard() {
     } catch (error) {
       navigate("/login", {
         replace: true,
-        state: { message: `Signed out locally, but server logout failed: ${error.message}` },
+        state: {
+          message: `Signed out locally, but server logout failed: ${error.message}`,
+        },
       });
     }
   }
@@ -100,7 +109,9 @@ function Dashboard() {
                 Task management
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
-                {user ? `Welcome, ${user.name}.` : "Keep your priorities visible and your next action clear."}
+                {user
+                  ? `Welcome, ${user.name}.`
+                  : "Keep your priorities visible and your next action clear."}
               </p>
             </div>
             <button
@@ -116,12 +127,17 @@ function Dashboard() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
           <div>
             {taskError && (
-              <p className="mb-4 rounded-lg border border-rose-900 bg-rose-950/60 px-4 py-3 text-sm text-rose-200" role="alert">
+              <p
+                className="mb-4 rounded-lg border border-rose-900 bg-rose-950/60 px-4 py-3 text-sm text-rose-200"
+                role="alert"
+              >
                 {taskError}
               </p>
             )}
             {isTasksLoading ? (
-              <p className="py-8 text-sm text-slate-400" role="status">Loading tasks...</p>
+              <p className="py-8 text-sm text-slate-400" role="status">
+                Loading tasks...
+              </p>
             ) : (
               <TaskList
                 tasks={tasks}
@@ -147,6 +163,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route
           path="/dashboard"
           element={
