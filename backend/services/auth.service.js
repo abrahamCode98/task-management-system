@@ -6,6 +6,7 @@ import { generateToken } from "../utils/generateToken.utils.js";
 import { generateRefreshToken } from "../utils/generateRefreshToken.utils.js";
 import { hashRefreshToken } from "../utils/hashRefreshToken.utils.js";
 import { parseDuration } from "../utils/time.utils.js";
+import { sendVerificationEmail } from "./emailVerification.service.js";
 
 export const registerUser = async ({ name, email, password }) => {
   const existingUser = await User.findOne({ email });
@@ -21,12 +22,16 @@ export const registerUser = async ({ name, email, password }) => {
     name,
     email,
     password: hashedPassword,
+    emailVerified: false,
   });
+
+  await sendVerificationEmail(newUser);
 
   return {
     _id: newUser._id,
     name: newUser.name,
     email: newUser.email,
+    emailVerified: newUser.emailVerified,
   };
 };
 
@@ -41,6 +46,10 @@ export const loginUser = async ({ email, password }) => {
 
   if (!isMatch) {
     throw new AppError("Invalid email or password", 401);
+  }
+
+  if (user.emailVerified !== true) {
+    throw new AppError("Please verify your email before logging in", 403);
   }
 
   const accessToken = generateToken(user);

@@ -32,7 +32,9 @@ function RegisterPage() {
           await register(registerFormData);
           navigate("/login", {
             replace: true,
-            state: { message: "Account created. Please sign in." },
+            state: {
+              message: "Account created. Check your email and verify your address before signing in.",
+            },
             });
         }catch(error) {
           setErrorMessage(error.message);

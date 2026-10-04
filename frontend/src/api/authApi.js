@@ -25,6 +25,18 @@ export async function registerUser(userData) {
   return registerUserData;
 }
 
+export async function verifyEmail(token) {
+  const response = await fetch(`${AUTH_API_URL}/verify-email`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ token }),
+  });
+
+  return readResponse(response);
+}
+
 export async function loginUser(userData) {
   const response = await fetch(`${AUTH_API_URL}/login`, {
     method: "POST",
@@ -69,12 +81,12 @@ export async function getCurrentUser(accessToken) {
 }
 
 export async function logoutUser() {
-    const response = await fetch(`${AUTH_API_URL}/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+  const response = await fetch(`${AUTH_API_URL}/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
 
-    await readResponse(response);
+  await readResponse(response);
 
-    return
-};
+  return;
+}
