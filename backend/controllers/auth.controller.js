@@ -8,6 +8,8 @@ import {
 import AppError from "../utils/appError.utils.js";
 import { verifyEmailToken } from "../services/emailVerification.service.js";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const registerController = async (req, res, next) => {
   const { name, email, password } = req.body;
 
@@ -38,8 +40,8 @@ export const loginController = async (req, res, next) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "strict",
       maxAge: refreshTokenDuration,
     });
 
@@ -66,8 +68,8 @@ export const refreshController = async (req, res, next) => {
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "strict",
       maxAge: refreshTokenDuration,
     });
 
@@ -81,8 +83,8 @@ export const refreshController = async (req, res, next) => {
       res.clearCookie("refreshToken", {
         path: "/",
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "strict",
       });
     }
 
@@ -98,8 +100,8 @@ export const logoutController = async (req, res, next) => {
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "strict",
     });
 
     res.status(200).json({
